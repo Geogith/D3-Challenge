@@ -1,8 +1,8 @@
 // script/code:
 
 // Define SVG area dimensions
-var svgWidth = 460;
-var svgHeight = 400;
+var svgWidth = 560;
+var svgHeight = 500;
 
 // console.log(svgWidth, svgHeight);
 
@@ -27,11 +27,11 @@ var plotHeight = svgHeight - plotMargin.top - plotMargin.bottom;
 var svg = d3
   .select("#scatter")
   .append("svg")
-  .attr("height", svgHeight + plotMargin.top + plotMargin.bottom)
-  .attr("width", svgWidth + plotMargin.left + plotMargin.right)
-  .append("g")
-  .attr(
-    "transform",
+  .attr("height", svgHeight)
+  .attr("width", svgWidth)
+
+var chartGroup = svg.append("g")
+  .attr("transform",
     "translate(" + plotMargin.left + ", " + plotMargin.top + ")"
   );
 
@@ -45,38 +45,103 @@ d3.csv("./data_resources/data_uhi.csv").then(function (censusData) {
   // console.log(censusData);
 
   // Add X and Y axis
-  var x = d3
+// function used for updating x-scale var upon click on axis label
+
+  //  // Step 1: Parse Data/Cast as numbers
+  //   // ==============================
+    censusData.forEach(function(data) {
+      data.poverty = +data.poverty;
+      data.healthcare = +data.healthcare;
+    });
+
+    // Step 2: Create scale functions
+    // ==============================
+
+  var xLinearScale = d3
     .scaleLinear()
-    .domain([
-      d3.min(censusData, (d) => d.proverty),
-      d3.max(censusData, (d) => d.proverty)
-    ])
+    // .domain([
+    //   d3.min(censusData, (d) => d.proverty),
+    //   d3.max(censusData, (d) => d.proverty)
+    // ])
+    .domain(d3.extent(censusData, d => d.poverty))
     .range([0, svgWidth]);
 
-  var y = d3
-    .scaleLinear()
-    .domain([0, d3.max(censusData, (d) => d.healthcare)])
-    .range([svgHeight, 0]);
-  svg.append("g").call(d3.axisLeft(y));
 
-  svg
-    .append("g")
-    .attr("transform", "translate(0," + svgHeight + ")")
-    .call(d3.axisBottom(x));
+  var yLinearScale = d3
+    .scaleLinear()
+    .domain([d3.min(censusData, (d) => d.healthcare), d3.max(censusData, (d) => d.healthcare)])
+    .range([svgHeight - 30, 30]);
+
+
+    // Step 3: Create axis functions
+    // ==============================
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // Step 4: Append Axes to the chart
+    // ==============================
+    chartGroup.append("g")
+      .attr("transform", `translate(0, ${svgHeight - 30})`)
+      .call(bottomAxis)
+    //  .attr("transform", `translate(0, ${svgHeight})`);
+    chartGroup.append("g")
+      .call(leftAxis);
+
+    // Step 5: Create Circles
+    // ==============================
+    // var circlesGroup = chartGroup.selectAll("circle")
+    // .data(hairData)
+    // .enter()
+    // .append("circle")
+    // .attr("cx", d => xLinearScale(d.hair_length))
+    // .attr("cy", d => yLinearScale(d.num_hits))
+    // .attr("r", "15")
+    // .attr("fill", "pink")
+    // .attr("opacity", ".5");
+
+console.log(censusData);
 
   // Add circles
-  svg
+  var circlesGroup = chartGroup
     .selectAll("circle")
     .data(censusData)
     .enter()
     .append("circle")
-    .attr("cx", function (d) {
-      // console.log(d.state);
-      return x(d.state);
+    .attr("cx", (d) => {
+      console.log(d.proverty)
+      return xLinearScale(d.poverty);
     })
     .attr("cy", function (d) {
-      return y(parseInt(d.healthcare));
+      return yLinearScale(d.healthcare);
     })
-    .attr("r", 10)
-    .style("fill", "#69b3a2");
+    .attr("r", "15")
+    .attr("fill", "purple")
+    .attr("opacity", ".5");
+}).catch(function(error){
+console.log(error);
 });
+
+
+   // Step 6: Initialize tool tip
+    // ==============================
+    var toolTip = d3.tip()
+      .attr("class", "tooltip")
+      .offset([80, -60])
+      .html(function(d) {
+        return (`${d.rockband}<br>Hair length: ${d.hair_length}<br>Hits: ${d.num_hits}`);
+      });
+
+    // Step 7: Create tooltip in the chart
+    // ==============================
+    chartGroup.call(toolTip);
+
+         // Step 8: Create event listeners to display and hide the tooltip
+    // ==============================
+    circlesGroup.on("click", function(data) {
+      toolTip.show(data, this);
+    })
+      // onmouseout event
+      .on("mouseout", function(data, index) {
+        toolTip.hide(data);
+      });
+ 
