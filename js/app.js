@@ -1,8 +1,8 @@
 // script/code:
 
 // Define SVG area dimensions
-var svgWidth = 560;
-var svgHeight = 500;
+var svgWidth = 590;
+var svgHeight = 560;
 
 // console.log(svgWidth, svgHeight);
 
@@ -59,10 +59,6 @@ d3.csv("./data_resources/data_uhi.csv").then(function (censusData) {
 
   var xLinearScale = d3
     .scaleLinear()
-    // .domain([
-    //   d3.min(censusData, (d) => d.proverty),
-    //   d3.max(censusData, (d) => d.proverty)
-    // ])
     .domain(d3.extent(censusData, d => d.poverty))
     .range([0, svgWidth]);
 
@@ -87,20 +83,66 @@ d3.csv("./data_resources/data_uhi.csv").then(function (censusData) {
     chartGroup.append("g")
       .call(leftAxis);
 
-    // Step 5: Create Circles
+// console.log(censusData);
+// ----------------------------------------------------------------------------------------------------
+
+
+
+        // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
+  // Its opacity is set to 0: we don't see it by default.
+  // var tooltip = d3.select("#scattertool")
+  //   .append("div")
+  //   .style("opacity", 0)
+  //   .attr("class", "tooltip")
+  //   .style("background-color", "white")
+  //   .style("border", "solid")
+  //   .style("border-width", "1px")
+  //   .style("border-radius", "5px")
+  //   .style("padding", "10px")
+
+    // console.log(tooltip)
+
+ // Step 6: Initialize tool tip
+  // ==============================
+    // var toolTip = d3.tip()
+    //   .attr("class", "tooltip")
+    //   .offset([80, -60])
+    //   .html(function(d) {
+    //     return (`${d.state}<br>healthcare: ${d.healthcare}<br>poverty: ${d.poverty}`);
+    //   });
+
+
+  // A function that change this tooltip when the user hover a point.
+  // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+  // var mouseover = function(d) {
+  //   tooltip
+  //     .style("opacity", 1)
+  // }
+
+  // var mousemove = function(d) {
+  //   tooltip
+  //     .html("The exact value of<br>the Ground Living area is: " + d.GrLivArea)
+  //     .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+  //     .style("top", (d3.mouse(this)[1]) + "px")
+  // }
+
+
+    // Step 7: Create tooltip in the chart
     // ==============================
-    // var circlesGroup = chartGroup.selectAll("circle")
-    // .data(hairData)
-    // .enter()
-    // .append("circle")
-    // .attr("cx", d => xLinearScale(d.hair_length))
-    // .attr("cy", d => yLinearScale(d.num_hits))
-    // .attr("r", "15")
-    // .attr("fill", "pink")
-    // .attr("opacity", ".5");
+    // chartGroup.call(toolTip);
 
-console.log(censusData);
+     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  // var mouseleave = function(d) {
+  //   tooltip
+  //     .transition()
+  //     .duration(200)
+  //     .style("opacity", 0)
+  // }
 
+
+
+
+// -------------------------------------------------------------------------------------------------------------------------------
   // Add circles
   var circlesGroup = chartGroup
     .selectAll("circle")
@@ -116,32 +158,46 @@ console.log(censusData);
     })
     .attr("r", "15")
     .attr("fill", "purple")
-    .attr("opacity", ".5");
+    .attr("opacity", ".5")
+
+    // .style("stroke", "white")
+    // .on("mouseover", mouseover )
+    // .on("mousemove", mousemove )
+    // .on("mouseleave", mouseleave );
+
+    //          // Step 8: Create event listeners to display and hide the tooltip
+    // // ==============================
+    // circlesGroup.on("click", function(data) {
+    //   toolTip.show(data, this);
+    // })
+    //   // onmouseout event
+    //   .on("mouseout", function(data, index) {
+    //     toolTip.hide(data);
+    //   });
+
+
 }).catch(function(error){
 console.log(error);
 });
 
 
-   // Step 6: Initialize tool tip
-    // ==============================
-    var toolTip = d3.tip()
-      .attr("class", "tooltip")
-      .offset([80, -60])
-      .html(function(d) {
-        return (`${d.rockband}<br>Hair length: ${d.hair_length}<br>Hits: ${d.num_hits}`);
-      });
-
-    // Step 7: Create tooltip in the chart
-    // ==============================
-    chartGroup.call(toolTip);
-
-         // Step 8: Create event listeners to display and hide the tooltip
-    // ==============================
-    circlesGroup.on("click", function(data) {
-      toolTip.show(data, this);
-    })
-      // onmouseout event
-      .on("mouseout", function(data, index) {
-        toolTip.hide(data);
-      });
+// -----------------------------------------------------------------------------------------------------------------------Correct above-------
  
+     // Create axes labels
+    chartGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left + 40)
+      .attr("x", 0 - (svgHeight / 2))
+      .attr("dy", "1em")
+      .attr("class", "axisText")
+      .text("% Healthcare by State");
+
+    chartGroup.append("text")
+      .attr("transform", `translate(${svgWidth / 2}, ${svgHeight + margin.top + 30})`)
+      .attr("class", "axisText")
+      .text("% in Proverty")
+  .catch(function(error) {
+    console.log(error);
+  });
+  
+
