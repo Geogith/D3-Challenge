@@ -40,7 +40,7 @@ var chartGroup = svg.append("g")
 
 //Read and Load data from censusdata.csv
 d3.csv("./data/data_uhi.csv").then(function (censusData) {
-  // console.log(censusData);
+  console.log(censusData);
 
   // Add X and Y axis
 // function used for updating x-scale var upon click on axis label
@@ -81,7 +81,7 @@ d3.csv("./data/data_uhi.csv").then(function (censusData) {
     chartGroup.append("g")
       .call(leftAxis);
   }).catch(function(error){
-      console.log(error);
+      console.log(error)
   });
 
        // X axis label. Nothing too special to see here.    
