@@ -39,7 +39,7 @@ var chartGroup = svg.append("g")
 // d3.csv(https://data.census.gov/cedsci/table?q=2014%20acs%20health%20insurance%20by%20Income%20and%20Poverty&tid=ACSDT1Y2014.B27015&hidePreview=false [, row, callback]);
 
 //Read and Load data from censusdata.csv
-d3.csv("./data_resources/data_uhi.csv").then(function (censusData) {
+d3.csv("./data/data_uhi.csv").then(function (censusData) {
   // console.log(censusData);
 
   // Add X and Y axis
