@@ -1,5 +1,3 @@
-// script/code:
-
 // Define SVG area dimensions
 var svgWidth = 590;
 var svgHeight = 560;
@@ -82,122 +80,26 @@ d3.csv("./data_resources/data_uhi.csv").then(function (censusData) {
     //  .attr("transform", `translate(0, ${svgHeight})`);
     chartGroup.append("g")
       .call(leftAxis);
+  }).catch(function(error){
+      console.log(error);
+  });
+
+       // X axis label. Nothing too special to see here.    
+     svg.append("text")    
+     .attr("fill", "#414241")    
+     .attr("text-anchor", "end")    
+     .attr("x", svgWidth / 1.5)    
+     .attr("y", svgHeight - 0.25)    
+     .text("In Poverty %"); 
+
+    //   // Y axis label. Nothing too special to see here.    
+      // svg.append('text')
+      // .attr("fill", "#414241") 
+      // .attr('x', svgHeight / 2)
+      // .attr('y', -60)
+      // .attr('transform', `rotate(-90)`)
+      // .style('text-anchor', 'middle')
+      // .text("% Lack Healthcare");
 
 // console.log(censusData);
-// ----------------------------------------------------------------------------------------------------
-
-
-
-        // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
-  // Its opacity is set to 0: we don't see it by default.
-  // var tooltip = d3.select("#scattertool")
-  //   .append("div")
-  //   .style("opacity", 0)
-  //   .attr("class", "tooltip")
-  //   .style("background-color", "white")
-  //   .style("border", "solid")
-  //   .style("border-width", "1px")
-  //   .style("border-radius", "5px")
-  //   .style("padding", "10px")
-
-    // console.log(tooltip)
-
- // Step 6: Initialize tool tip
-  // ==============================
-    // var toolTip = d3.tip()
-    //   .attr("class", "tooltip")
-    //   .offset([80, -60])
-    //   .html(function(d) {
-    //     return (`${d.state}<br>healthcare: ${d.healthcare}<br>poverty: ${d.poverty}`);
-    //   });
-
-
-  // A function that change this tooltip when the user hover a point.
-  // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-  // var mouseover = function(d) {
-  //   tooltip
-  //     .style("opacity", 1)
-  // }
-
-  // var mousemove = function(d) {
-  //   tooltip
-  //     .html("The exact value of<br>the Ground Living area is: " + d.GrLivArea)
-  //     .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-  //     .style("top", (d3.mouse(this)[1]) + "px")
-  // }
-
-
-    // Step 7: Create tooltip in the chart
-    // ==============================
-    // chartGroup.call(toolTip);
-
-     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-  // var mouseleave = function(d) {
-  //   tooltip
-  //     .transition()
-  //     .duration(200)
-  //     .style("opacity", 0)
-  // }
-
-
-
-
-// -------------------------------------------------------------------------------------------------------------------------------
-  // Add circles
-  var circlesGroup = chartGroup
-    .selectAll("circle")
-    .data(censusData)
-    .enter()
-    .append("circle")
-    .attr("cx", (d) => {
-      console.log(d.proverty)
-      return xLinearScale(d.poverty);
-    })
-    .attr("cy", function (d) {
-      return yLinearScale(d.healthcare);
-    })
-    .attr("r", "15")
-    .attr("fill", "purple")
-    .attr("opacity", ".5")
-
-    // .style("stroke", "white")
-    // .on("mouseover", mouseover )
-    // .on("mousemove", mousemove )
-    // .on("mouseleave", mouseleave );
-
-    //          // Step 8: Create event listeners to display and hide the tooltip
-    // // ==============================
-    // circlesGroup.on("click", function(data) {
-    //   toolTip.show(data, this);
-    // })
-    //   // onmouseout event
-    //   .on("mouseout", function(data, index) {
-    //     toolTip.hide(data);
-    //   });
-
-
-}).catch(function(error){
-console.log(error);
-});
-
-
-// -----------------------------------------------------------------------------------------------------------------------Correct above-------
- 
-     // Create axes labels
-    chartGroup.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left + 40)
-      .attr("x", 0 - (svgHeight / 2))
-      .attr("dy", "1em")
-      .attr("class", "axisText")
-      .text("% Healthcare by State");
-
-    chartGroup.append("text")
-      .attr("transform", `translate(${svgWidth / 2}, ${svgHeight + margin.top + 30})`)
-      .attr("class", "axisText")
-      .text("% in Proverty")
-  .catch(function(error) {
-    console.log(error);
-  });
-  
 
