@@ -51,7 +51,7 @@ d3.csv("./data_res/data_uhi.csv").then(function (censusData) {
       data.healthcareLow = +data.healthcareLow;
     });
 
-    // Step 2: Create scale functions
+  // Step 2: Create scale functions
 
   var xLinearScale = d3.scaleLinear()
     .domain(d3.extent(censusData, d => d.poverty))
@@ -62,12 +62,12 @@ d3.csv("./data_res/data_uhi.csv").then(function (censusData) {
     .range([svgHeight, 0]);
 
 
-    // Step 3: Create axis functions
+  // Step 3: Create axis functions
     
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
-    // Step 4: Append Axes to the chart
+  // Step 4: Append Axes to the chart
  
     chartGroup.append("g")
       .attr("transform", `translate(0, ${svgHeight - 60})`)
@@ -78,7 +78,7 @@ d3.csv("./data_res/data_uhi.csv").then(function (censusData) {
   //     console.log(error)
   // });
 
-// Step 5: Create circles
+  // Step 5: Create circles
 
 var circlesGroup = chartGroup.selectAll("Circle")
   .data(censusData)
@@ -118,7 +118,7 @@ var circlesGroup = chartGroup.selectAll("Circle")
      .attr("y", svgHeight - 0.25)    
      .text("In Poverty (%)"); 
 
-// Code below is where the client can hover over the circle and the state's healthcare and proverty stats appear:
+// Step:6 Code below is where the client can hover over the circle and the state's healthcare and proverty stats appear:
 
     // Initialize tooltip
     var toolTip = d3.tip() 
