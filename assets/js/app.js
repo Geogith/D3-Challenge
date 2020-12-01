@@ -48,7 +48,7 @@ d3.csv("./data_res/data_uhi.csv").then(function (censusData) {
   
     censusData.forEach(function(data) {
       data.poverty = +data.poverty;
-      data.healthcare = +data.healthcare;
+      data.healthcareLow = +data.healthcareLow;
     });
 
     // Step 2: Create scale functions
@@ -58,7 +58,7 @@ d3.csv("./data_res/data_uhi.csv").then(function (censusData) {
     .range([0, svgWidth]);
 
   var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(censusData, (d) => d.healthcare)])
+    .domain([0, d3.max(censusData, (d) => d.healthcareLow)])
     .range([svgHeight, 0]);
 
 
@@ -85,7 +85,7 @@ var circlesGroup = chartGroup.selectAll("Circle")
   .enter()
   .append("circle")
   .attr("cx", d => xLinearScale(d.poverty))
-  .attr("cy", d => yLinearScale(d.healthcare))
+  .attr("cy", d => yLinearScale(d.healthcareLow))
   .attr("r", "15")
   .attr("fill", "blue")
   .attr("opacity", "0.5");
@@ -95,7 +95,7 @@ var circlesGroup = chartGroup.selectAll("Circle")
     
     circleLabels
       .attr("x", function(d) { return d.poverty; })
-      .attr("y", function(d) { return d.healthcare; })
+      .attr("y", function(d) { return d.healthcareLow; })
       .text(function(d) { return d.abbr; })
       .attr("font-family", "sans-serif")
       .attr("font-size", "5px")
@@ -125,7 +125,7 @@ var circlesGroup = chartGroup.selectAll("Circle")
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return  `${d.state}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}<br>`; 
+        return  `${d.state}<br>Poverty: ${d.poverty}<br>HealthcareLow: ${d.healthcareLow}<br>`; 
     });
 
     // Create tooltip in the chart
