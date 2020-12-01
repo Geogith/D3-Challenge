@@ -91,8 +91,8 @@ var circlesGroup = chartGroup.selectAll("Circle")
   .attr("opacity", "0.5");
 
       // Add state labels to circles
-    var circleLabels = chartGroup.selectAll(null).data(censusData).enter().append("text");
-
+    var circleLabels = chartGroup.selectAll(null).data(censusData).enter().append("text");  
+    
     circleLabels
       .attr("x", function(d) { return d.poverty; })
       .attr("y", function(d) { return d.healthcare; })
@@ -101,7 +101,7 @@ var circlesGroup = chartGroup.selectAll("Circle")
       .attr("font-size", "5px")
       .attr("fill", "white");
 
-    // Create axes labels
+    // Create axes labels for "y" and "x" axes including positioning the text
     chartGroup.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - plotMargin.left + 40)
@@ -117,6 +117,8 @@ var circlesGroup = chartGroup.selectAll("Circle")
      .attr("x", svgWidth / 1.5)    
      .attr("y", svgHeight - 0.25)    
      .text("In Poverty (%)"); 
+
+// Code below is where the client can hover over the circle and the state's healthcare and proverty stats appear:
 
     // Initialize tooltip
     var toolTip = d3.tip() 
